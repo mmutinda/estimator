@@ -4,11 +4,6 @@
 class CovidEstimator
 {
 
-    public $periodType = "days";
-    public $timeToElapse = 58;
-    public $reportedCases = 674;
-    public $population = 66622705;
-    public $totalHospitalBeds = 1380614;
 
     public $inputdata;
     public $response = [];
@@ -20,8 +15,43 @@ class CovidEstimator
 
         $this->inputdata = $decodedData;
 
-        $this->response['impact']['currentlyInfected'] = 10 * $decodedData->reportedCases;
-        $this->response['severeImpact']['currentlyInfected'] = 50 * $decodedData->reportedCases;
+        $currentlyInfectedUnderImpact = 10 * $decodedData->reportedCases;
+        $currentlyInfectedUnderSevere = 50 * $decodedData->reportedCases;
+        $this->response['impact']['currentlyInfected'] = $currentlyInfectedUnderImpact;
+        $this->response['severeImpact']['currentlyInfected'] =  $currentlyInfectedUnderSevere;
+
+        //confirm...keys
+        $impactinfectionsByRequestedTime = $this->infectionsByRequestedTime($currentlyInfectedUnderImpact, $decodedData->timeToElapse, $decodedData->periodType);
+        $severeinfectionsByRequestedTime = $this->infectionsByRequestedTime( $currentlyInfectedUnderSevere, $decodedData->timeToElapse,  $decodedData->periodType);
+
+        $this->response['impact']['infectionsByRequestedTime'] = $impactinfectionsByRequestedTime;
+        $this->response['severeImpact']['infectionsByRequestedTime'] = $severeinfectionsByRequestedTime;
+
+    
+        $this->response['impact']['severeCasesByRequestedTime'] = 0.15 * $impactinfectionsByRequestedTime;
+        $this->response['severeImpact']['severeCasesByRequestedTime'] = 0.15 * $severeinfectionsByRequestedTime;
+
+        //challenge 2
+
+        $this->response['impact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData->totalHospitalBeds;
+        $this->response['severeImpact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData->totalHospitalBeds;
+
+        //challenge 3
+        
+        $this->response['impact']['casesForICUByRequestedTime'] = 0.05 * $impactinfectionsByRequestedTime;
+        $this->response['severeImpact']['casesForICUByRequestedTime'] = 0.05 * $severeinfectionsByRequestedTime;
+
+         
+        $this->response['impact']['casesForVentilatorsByRequestedTime'] = 0.02 * $impactinfectionsByRequestedTime;
+        $this->response['severeImpact']['casesForVentilatorsByRequestedTime'] = 0.02 * $severeinfectionsByRequestedTime;
+
+        $region = $decodedData->region;
+        $avgDailyIncomeInUSD = $region->avgDailyIncomeInUSD;
+        $avgDailyIncomePopulation = $region->avgDailyIncomePopulation;
+
+        $this->response['impact']['dollarsInFlight'] = $impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData->timeToElapse;
+        $this->response['severeImpact']['dollarsInFlight'] = $severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData->timeToElapse;
+
 
     }
 
@@ -29,35 +59,53 @@ class CovidEstimator
 
 
 
-    function currentInfected()
+    public function infectionsByRequestedTime($currentlyInfected, $count, $periodType)
     {
-        echo "TODAYS REPORTED CASES:" . "<br>";
-        return $this->reportedCases . "<br>";
+
+        $localDays = 0;
+        if ($periodType == 'days')
+        {
+            $localDays = $count;
+        } else if ($periodType == 'weeks')
+        {
+            $localDays = $count * 7;
+
+        } else if ($periodType == 'months')
+        {
+            $localDays = $count * 30;
+        } else {
+            $localDays = $count;
+        }
+
+        $res =  floor($localDays / 3);
+
+        return $currentlyInfected * pow(2, $res);
+        
     }
 
-    function impact()
+    public function getOutput() 
     {
-        echo "The impact of unknown infected people:" . "<br>";
-        return $this->reportedCases * 10 . "<br>";
+        $this->response['data'] = $this->inputdata;
+        return json_encode($this->response);
     }
 
 
 
-
-    function severeimpact()
-
-    {
-        $date = date('Y-m-d') . "<br>";
-        echo "Todays reported cases date :" . $date;
-        $create = date('Y-m-d', strtotime("+28 days"));
-
-
-        echo "In 28 days to come which will be on this date:" . $create . "<br>";
-        echo "The infected people will be" . "<br>";
-        return $this->reportedCases * 512 . " people.";
-    }
 }
-// $case1 = new CovidData(3);
-// echo $case1->currentInfected();
-// echo $case1->impact();
-// echo $case1->severeimpact();
+
+$jsonStr = '{
+    "region": {
+      "name": "Africa",
+      "avgAge": 19.7,
+      "avgDailyIncomeInUSD": 5,
+      "avgDailyIncomePopulation": 0.71
+    },
+    "periodType": "days",
+    "timeToElapse": 58,
+    "reportedCases": 674,
+    "population": 66622705,
+    "totalHospitalBeds": 1380614
+  }';
+
+$case1 = new CovidEstimator($jsonStr);
+echo $case1->getOutput();
