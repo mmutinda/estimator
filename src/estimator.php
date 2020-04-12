@@ -26,4 +26,6 @@ function covid19ImpactEstimator($data)
 //   "totalHospitalBeds": 1380614
 // }';
 
-// covid19ImpactEstimator($jsonStr);
+// var_dump(json_decode($jsonStr,1));
+
+// covid19ImpactEstimator(json_decode($jsonStr,1));

@@ -15,14 +15,14 @@ class Covidestimator
 
         $this->inputdata = $decodedData;
 
-        $currentlyInfectedUnderImpact = 10 * $decodedData->reportedCases;
-        $currentlyInfectedUnderSevere = 50 * $decodedData->reportedCases;
+        $currentlyInfectedUnderImpact = 10 * $decodedData['reportedCases'];
+        $currentlyInfectedUnderSevere = 50 * $decodedData['reportedCases'];
         $this->response['impact']['currentlyInfected'] = $currentlyInfectedUnderImpact;
         $this->response['severeImpact']['currentlyInfected'] =  $currentlyInfectedUnderSevere;
 
         //confirm...keys
-        $impactinfectionsByRequestedTime = $this->infectionsByRequestedTime($currentlyInfectedUnderImpact, $decodedData->timeToElapse, $decodedData->periodType);
-        $severeinfectionsByRequestedTime = $this->infectionsByRequestedTime( $currentlyInfectedUnderSevere, $decodedData->timeToElapse,  $decodedData->periodType);
+        $impactinfectionsByRequestedTime = $this->infectionsByRequestedTime($currentlyInfectedUnderImpact, $decodedData['timeToElapse'], $decodedData['periodType']);
+        $severeinfectionsByRequestedTime = $this->infectionsByRequestedTime( $currentlyInfectedUnderSevere, $decodedData['timeToElapse'],  $decodedData['periodType']);
 
         $this->response['impact']['infectionsByRequestedTime'] = $impactinfectionsByRequestedTime;
         $this->response['severeImpact']['infectionsByRequestedTime'] = $severeinfectionsByRequestedTime;
@@ -33,8 +33,8 @@ class Covidestimator
 
         //challenge 2
 
-        $this->response['impact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData->totalHospitalBeds;
-        $this->response['severeImpact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData->totalHospitalBeds;
+        $this->response['impact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData['totalHospitalBeds'];
+        $this->response['severeImpact']['hospitalBedsByRequestedTime'] = 0.35 * $decodedData['totalHospitalBeds'];
 
         //challenge 3
         
@@ -45,12 +45,12 @@ class Covidestimator
         $this->response['impact']['casesForVentilatorsByRequestedTime'] = 0.02 * $impactinfectionsByRequestedTime;
         $this->response['severeImpact']['casesForVentilatorsByRequestedTime'] = 0.02 * $severeinfectionsByRequestedTime;
 
-        $region = $decodedData->region;
-        $avgDailyIncomeInUSD = $region->avgDailyIncomeInUSD;
-        $avgDailyIncomePopulation = $region->avgDailyIncomePopulation;
+        $region = $decodedData['region'];
+        $avgDailyIncomeInUSD = $region['avgDailyIncomeInUSD'];
+        $avgDailyIncomePopulation = $region['avgDailyIncomePopulation'];
 
-        $this->response['impact']['dollarsInFlight'] = $impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData->timeToElapse;
-        $this->response['severeImpact']['dollarsInFlight'] = $severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData->timeToElapse;
+        $this->response['impact']['dollarsInFlight'] = $impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse'];
+        $this->response['severeImpact']['dollarsInFlight'] = $severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse'];
 
 
     }
@@ -86,7 +86,8 @@ class Covidestimator
     public function getOutput() 
     {
         $this->response['data'] = $this->inputdata;
-        return json_encode($this->response);
+        // var_dump($this->response);
+        return $this->response;
     }
 
 
