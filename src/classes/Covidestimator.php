@@ -11,6 +11,7 @@ class Covidestimator
     function __construct($inputDataStr)
     {
 
+        print_r(json_encode($inputDataStr));
         $decodedData = $inputDataStr;
 
         $this->inputdata = $decodedData;
@@ -86,7 +87,7 @@ class Covidestimator
     public function getOutput() 
     {
         $this->response['data'] = $this->inputdata;
-        var_dump($this->response);
+        // var_dump($this->response);
         return $this->response;
     }
 
