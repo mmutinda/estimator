@@ -1,7 +1,8 @@
 <?php
 
+namespace classes;
 
-class CovidEstimator
+class Covidestimator
 {
 
 
@@ -92,20 +93,3 @@ class CovidEstimator
 
 
 }
-
-$jsonStr = '{
-    "region": {
-      "name": "Africa",
-      "avgAge": 19.7,
-      "avgDailyIncomeInUSD": 5,
-      "avgDailyIncomePopulation": 0.71
-    },
-    "periodType": "days",
-    "timeToElapse": 58,
-    "reportedCases": 674,
-    "population": 66622705,
-    "totalHospitalBeds": 1380614
-  }';
-
-$case1 = new CovidEstimator($jsonStr);
-echo $case1->getOutput();
