@@ -127,5 +127,39 @@ class Covidestimator
     }
 
 
+    public function CreateLog($message, $file = 'log.txt')
+    {
+        date_default_timezone_set("Africa/Nairobi");
+
+        $destinationPath = '../../../api/v1/on-covid-19/logs'; 
+
+
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+        // using the FILE_APPEND flag to append the content to the end of the file
+        // and the LOCK_EX flag to prevent anyone else writing to the file at the same time
+        file_put_contents($destinationPath . '/' . $file, $message, FILE_APPEND | LOCK_EX);
+        file_put_contents($destinationPath . '/' . $file, "\n", FILE_APPEND | LOCK_EX);
+    }
+
+    public function array2xml($array, $xml = false){
+
+        if($xml === false){
+            $xml = new SimpleXMLElement('<result/>');
+        }
+    
+        foreach($array as $key => $value){
+            if(is_array($value)){
+                $this->array2xml($value, $xml->addChild($key));
+            } else {
+                $xml->addChild($key, $value);
+            }
+        }
+    
+        return $xml->asXML();
+    }
+
+
 
 }
