@@ -29,29 +29,36 @@ class Covidestimator
         $this->response['severeImpact']['infectionsByRequestedTime'] = $severeinfectionsByRequestedTime;
 
     
-        $this->response['impact']['severeCasesByRequestedTime'] = floor(0.15 * $impactinfectionsByRequestedTime);
-        $this->response['severeImpact']['severeCasesByRequestedTime'] = floor(0.15 * $severeinfectionsByRequestedTime);
+        $impactsevereCasesByRequestedTime = intval (0.15 * $impactinfectionsByRequestedTime);
+        $severeImpactsevereCasesByRequestedTime = intval(0.15 * $severeinfectionsByRequestedTime);
+
+
+        $this->response['impact']['severeCasesByRequestedTime'] = $impactsevereCasesByRequestedTime;
+        $this->response['severeImpact']['severeCasesByRequestedTime'] = $severeImpactsevereCasesByRequestedTime;
 
         //challenge 2
 
-        $this->response['impact']['hospitalBedsByRequestedTime'] = floor((0.35 * $decodedData['totalHospitalBeds']) - $impactinfectionsByRequestedTime);
-        $this->response['severeImpact']['hospitalBedsByRequestedTime'] = floor((0.35 * $decodedData['totalHospitalBeds']) - $severeinfectionsByRequestedTime);
+        $this->response['impact']['hospitalBedsByRequestedTime'] = intval((0.35 * $decodedData['totalHospitalBeds']) - $impactsevereCasesByRequestedTime);
+        $this->response['severeImpact']['hospitalBedsByRequestedTime'] = intval((0.35 * $decodedData['totalHospitalBeds']) - $severeImpactsevereCasesByRequestedTime);
 
+        // var_dump( $this->response['impact']['hospitalBedsByRequestedTime'] );
+        // var_dump(  $this->response['severeImpact']['hospitalBedsByRequestedTime'] );
+        // die();
         //challenge 3
         
-        $this->response['impact']['casesForICUByRequestedTime'] = floor(0.05 * $impactinfectionsByRequestedTime);
-        $this->response['severeImpact']['casesForICUByRequestedTime'] = floor(0.05 * $severeinfectionsByRequestedTime);
+        $this->response['impact']['casesForICUByRequestedTime'] = intval(0.05 * $impactinfectionsByRequestedTime);
+        $this->response['severeImpact']['casesForICUByRequestedTime'] = intval(0.05 * $severeinfectionsByRequestedTime);
 
          
-        $this->response['impact']['casesForVentilatorsByRequestedTime'] = floor(0.02 * $impactinfectionsByRequestedTime);
-        $this->response['severeImpact']['casesForVentilatorsByRequestedTime'] = floor(0.02 * $severeinfectionsByRequestedTime);
+        $this->response['impact']['casesForVentilatorsByRequestedTime'] = intval(0.02 * $impactinfectionsByRequestedTime);
+        $this->response['severeImpact']['casesForVentilatorsByRequestedTime'] = intval(0.02 * $severeinfectionsByRequestedTime);
 
         $region = $decodedData['region'];
         $avgDailyIncomeInUSD = $region['avgDailyIncomeInUSD'];
         $avgDailyIncomePopulation = $region['avgDailyIncomePopulation'];
 
-        $this->response['impact']['dollarsInFlight'] = floor($impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
-        $this->response['severeImpact']['dollarsInFlight'] = floor($severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
+        $this->response['impact']['dollarsInFlight'] = intval($impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
+        $this->response['severeImpact']['dollarsInFlight'] = intval($severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
 
 
     }
@@ -78,16 +85,17 @@ class Covidestimator
             $localDays = $count;
         }
 
-        $res =  floor($localDays / 3);
+        $res =  intval($localDays / 3);
 
-        return floor($currentlyInfected * pow(2, $res));
+        return intval($currentlyInfected * pow(2, $res));
         
     }
 
     public function getOutput() 
     {
         $this->response['data'] = $this->inputdata;
-        // var_dump($this->response);
+        // echo json_encode($this->response);
+        // die();
         return $this->response;
     }
 
