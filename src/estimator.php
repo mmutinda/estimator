@@ -12,7 +12,7 @@ function covid19ImpactEstimator($data)
 
 
 
-// $jsonStr = '{
+// $jsonStr2 = '{
 //   "region": {
 //     "name": "Africa",
 //     "avgAge": 19.7,
@@ -26,6 +26,8 @@ function covid19ImpactEstimator($data)
 //   "totalHospitalBeds": 678874
 // }';
 
+
+
 // var_dump(json_decode($jsonStr,1));
 
-//covid19ImpactEstimator(json_decode($jsonStr,1));
+// echo json_encode(covid19ImpactEstimator(json_decode($jsonStr,1)));

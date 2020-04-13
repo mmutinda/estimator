@@ -57,8 +57,9 @@ class Covidestimator
         $avgDailyIncomeInUSD = $region['avgDailyIncomeInUSD'];
         $avgDailyIncomePopulation = $region['avgDailyIncomePopulation'];
 
-        $this->response['impact']['dollarsInFlight'] = intval($impactinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
-        $this->response['severeImpact']['dollarsInFlight'] = intval($severeinfectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD * $decodedData['timeToElapse']);
+        $this->response['impact']['dollarsInFlight'] = $this->getDollarsInflight($impactinfectionsByRequestedTime , $avgDailyIncomePopulation, $avgDailyIncomeInUSD,$decodedData['periodType'], $decodedData['timeToElapse']) ;
+        $this->response['severeImpact']['dollarsInFlight'] = $this->getDollarsInflight($severeinfectionsByRequestedTime , $avgDailyIncomePopulation, $avgDailyIncomeInUSD,$decodedData['periodType'], $decodedData['timeToElapse']) ; 
+        
 
 
     }
@@ -88,6 +89,32 @@ class Covidestimator
         $res =  intval($localDays / 3);
 
         return intval($currentlyInfected * pow(2, $res));
+        
+    }
+
+    public function getDollarsInflight($infectionsByRequestedTime, $avgDailyIncomePopulation, $avgDailyIncomeInUSD, $periodType, $count)
+    {
+
+        $localDays = 0;
+        if ($periodType == 'days')
+        {
+            $localDays = $count;
+        } else if ($periodType == 'weeks')
+        {
+            $localDays = $count * 7;
+
+        } else if ($periodType == 'months')
+        {
+            $localDays = $count * 30;
+        } else {
+            $localDays = $count;
+        }
+
+
+        $result = ($infectionsByRequestedTime * $avgDailyIncomePopulation * $avgDailyIncomeInUSD) / $localDays;
+
+
+        return intval($result);
         
     }
 
