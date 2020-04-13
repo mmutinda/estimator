@@ -11,7 +11,7 @@ class Covidestimator
     function __construct($inputDataStr)
     {
 
-        print_r(json_encode($inputDataStr));
+        // print_r(json_encode($inputDataStr));
         $decodedData = $inputDataStr;
 
         $this->inputdata = $decodedData;
