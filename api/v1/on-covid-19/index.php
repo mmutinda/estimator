@@ -29,7 +29,7 @@ $case1->CreateLog($logMessage);
 
 
 
-if($path_only == '/api/v1/on-covid-19/xml')
+if($path_only == '/api/v1/on-covid-19/index.php/xml')
 {
 
     $testarr = ['name'=>'mike','age'=> 23];
