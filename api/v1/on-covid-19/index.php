@@ -24,7 +24,7 @@ $resultArray = $case1->getOutput();
 $time_elapsed_secs = microtime(true) - $start;
 // log the request which basically means writing to a text file log file....
 $timeinmilliseconds = round($time_elapsed_secs * 1000, 2);
-$logMessage = $method ."		". $path_only . "\t ". "200" . "\t ". $timeinmilliseconds ."ms";
+$logMessage = $method ."\t\t". $path_only . "\t\t". "200" . "\t\t". $timeinmilliseconds ."ms";
 $case1->CreateLog($logMessage);
 
 
