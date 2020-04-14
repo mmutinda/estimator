@@ -131,7 +131,7 @@ class Covidestimator
     {
         date_default_timezone_set("Africa/Nairobi");
 
-        $destinationPath = '../../../api/v1/on-covid-19/logs'; 
+        $destinationPath = '../../../api/v1/on-covid-19/logss'; 
 
 
         if (!file_exists($destinationPath)) {

@@ -36,7 +36,13 @@ if($path_only == '/api/v1/on-covid-19/index.php/xml')
     $xmlresponse =  $case1->array2xml($resultArray);
     header('Content-Type: application/xml');
     echo $xmlresponse;
-} 
+} else if ( $path_only== '/api/v1/on-covid-19/logs'){
+    $file_name = 'logss/log.txt';
+
+    $file_contents =  file_get_contents( $file_name );
+
+    echo "<pre style='word-wrap: break-word; white-space: pre-wrap;'>". $file_contents . "</pre>";
+}
 else {
     header('Content-Type: application/json');
     echo json_encode($resultArray);
