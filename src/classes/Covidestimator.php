@@ -140,7 +140,7 @@ class Covidestimator
         // using the FILE_APPEND flag to append the content to the end of the file
         // and the LOCK_EX flag to prevent anyone else writing to the file at the same time
         file_put_contents($destinationPath . '/' . $file, $message, FILE_APPEND | LOCK_EX);
-        //file_put_contents($destinationPath . '/' . $file, "\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($destinationPath . '/' . $file, "\n", FILE_APPEND | LOCK_EX);
     }
 
     public function array2xml($array, $xml = false){
@@ -156,7 +156,7 @@ class Covidestimator
                 $xml->addChild($key, $value);
             }
         }
-        
+
     
         return $xml->asXML();
     }
